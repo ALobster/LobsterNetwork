@@ -170,14 +170,12 @@ def scan_port(args):
         result = s.connect_ex((target_ip, port))
         if result == 0:
             print(Fore.GREEN, f"Port {port} is open on {target_ip}")
+        s.close()
     except Exception as e:
         print(Fore.RED, f"An error occurred while scanning port {port}: {str(e)}")
 
 
-
 def port_scanner(target_ip, start_port, end_port):
-
-    import concurrent.futures
     with concurrent.futures.ThreadPoolExecutor() as executor:
         port_range = range(start_port, end_port + 1)
         executor.map(scan_port, [(target_ip, port) for port in port_range])
