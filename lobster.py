@@ -176,6 +176,8 @@ def scan_port(args):
 
 
 def port_scanner(target_ip, start_port, end_port):
+    import concurrent.futures
+
     with concurrent.futures.ThreadPoolExecutor() as executor:
         port_range = range(start_port, end_port + 1)
         executor.map(scan_port, [(target_ip, port) for port in port_range])
