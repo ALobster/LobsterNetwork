@@ -21,6 +21,13 @@ except ModuleNotFoundError as err:
     print(err, 'please install it')
 
 ops = platform.system().lower()
+if 'windows' in ops:
+    os.system('cls')
+
+else:
+    os.system('clear')
+
+ops = platform.system().lower()
 
 _version_ = 1.0
 
@@ -74,7 +81,7 @@ def device_scan():
         print("Online devices in the network:")
         for device in online_devices:
             print(device)
-            main()
+            
 
     def main_scan():
         # Get the network range from the user
@@ -216,14 +223,32 @@ def read_packets(ip_address, adapter):
     for packet in capture.sniff_continuously():
         print_packet(packet)
 
+def displayHelp():
+    print("""
+          option  :  command
+    - Port scanner: port {ip} {start port}-{end port}
+    - Packet sender: send
+    - Device scan: scan lan
+    - Network scan: scan network
+    - CCTV scanner: cctv
+    - Show this message: help
+    - Reset terminal: clear
 
-def main():
-    ops = platform.system().lower()
+    """)
+
+
+
+def clear():
     if 'windows' in ops:
         os.system('cls')
-
+        main()
+        
     else:
         os.system('clear')
+        main()
+    
+def main():
+
 
     print(Fore.BLUE, '''             
 
@@ -309,7 +334,7 @@ def main():
         elif command[0:4] == 'scan':
             if command[5:] == 'network':
                 net_scan()
-            else:
+            elif command[5:] == 'lan':
                 for i in range(256):
                     ip_address = f"192.168.1.{i}"
                     domain_name = get_domain_name(ip_address)
@@ -319,7 +344,9 @@ def main():
                     else:
                         print(Fore.RED, f'The IP address {ip_address} does not exist currently on the network')
 
-
+            else:
+                print('Invalid option type -h to see options')
+            
 
         elif command[0:11] == 'device scan':
             device_scan()
@@ -335,6 +362,15 @@ def main():
         elif command[0:len('read')] == 'read':
             ip, adapter = command[5:].split('/')
             read_packets(ip, adapter)
+
+        elif command[0:4] == 'help':
+            displayHelp()
+
+        elif command[0:5] == 'clear':
+            clear()
+
+        else:
+            print('invalid option type help to view commands')
 
 
 if __name__ == '__main__':
